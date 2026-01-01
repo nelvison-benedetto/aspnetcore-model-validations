@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using _5_aspnetcore_model_validations.CustomValidators;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 
@@ -27,8 +28,16 @@ public class Person
     [Display(Name ="re-enter psw")]
     public string? ConfirmPsw { get; set; }
 
-    [Range(0, 999, ErrorMessage ="{0} should be between {1} and {2}")]
+    [Range(0, 999.99, ErrorMessage ="{0} should be between {1} and {2}")]
     public double? Price { get; set; }
+
+
+    [MinimumYearValidator(2005)]  //here i'm using my custom validator!!! here run default error mex
+    public DateTime? DateOfBirth { get; set; }
+
+    public DateTime? FromDate { get; set; }
+    public DateTime? ToDate { get; set; }
+
 
     public override string ToString()
     {
