@@ -36,6 +36,8 @@ public class Person
     public DateTime? DateOfBirth { get; set; }
 
     public DateTime? FromDate { get; set; }
+
+    [DateRangeValidator("FromDate", ErrorMessage="'from date' should be older than or equal to 'to date'")]
     public DateTime? ToDate { get; set; }
 
 
