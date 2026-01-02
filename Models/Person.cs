@@ -1,11 +1,12 @@
 ﻿using _5_aspnetcore_model_validations.CustomValidators;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding; //x binding
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace _5_aspnetcore_model_validations.Models;
 
-public class Person
+public class Person : IValidatableObject
 {
     [Required(ErrorMessage ="person name can't be empty or null")]
     [Display(Name ="Person Name")]
@@ -33,6 +34,7 @@ public class Person
 
 
     [MinimumYearValidator(2005)]  //here i'm using my custom validator!!! here run default error mex
+    [BindNever]  // this will prevent binding this property from request data
     public DateTime? DateOfBirth { get; set; }
 
     public DateTime? FromDate { get; set; }
@@ -40,9 +42,17 @@ public class Person
     [DateRangeValidator("FromDate", ErrorMessage="'from date' should be older than or equal to 'to date'")]
     public DateTime? ToDate { get; set; }
 
+    public int? Age { get; set; }
 
     public override string ToString()
     {
         return $"PersonName: {PersonName}, Email: {Email}, Phone: {Phone}, Psw: {Psw}, ConfirmPsw: {ConfirmPsw}, Price: {Price}";
+    }
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (DateOfBirth.HasValue == false && Age.HasValue == false) {
+            yield return new ValidationResult("either of date of birth or age must be supplied", new[] { nameof(Age) });
+        }
     }
 }
